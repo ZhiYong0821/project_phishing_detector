@@ -40,7 +40,8 @@ def prepare_dataset(base_directory):
     # returns the list of email (in form of dictionaries) to a dataframe
     return pd.DataFrame(data)
 
-base_dir = r"C:\Users\Admin\Documents\Code\School Assignments\Project Phishing Detector\src\datasets" 
+#base_dir = r"C:\Users\Admin\Documents\Code\School Assignments\Project Phishing Detector\src\datasets" 
+base_dir = '/Users/zhiyong/project_phishing_detector/src/datasets'
 
 #assigns the list of email dictionaries to df variable
 df = prepare_dataset(base_dir)
