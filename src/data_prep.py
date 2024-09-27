@@ -72,11 +72,15 @@ def prepare_dataset(base_directory):
     # returns the list of email (in form of dictionaries) to a dataframe
     return pd.DataFrame(data)
 
-base_dir = r"C:\Users\Admin\Documents\Code\School Assignments\Project Phishing Detector\src\datasets" 
+#base_dir = r"C:\Users\Admin\Documents\Code\School Assignments\Project Phishing Detector\src\datasets" 
 #base_dir = '/Users/zhiyong/project_phishing_detector/src/datasets'
 
+# Changed base_dir code cater to different file paths - YongYing
+base_dir = os.path.dirname(os.path.abspath(__file__))
+data_file_path = os.path.join(base_dir,'datasets')
+
 #assigns the list of email dictionaries to df variable
-df = prepare_dataset(base_dir)
+df = prepare_dataset(data_file_path)
 
 df.dropna()
 #df_clean = df.dropna()
