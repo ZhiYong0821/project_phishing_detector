@@ -1,18 +1,50 @@
 import os
 import pandas as pd
 import email
+import chardet
 
-# extracts features from email files for analysis
 def extract_email_features(filepath):
-    with open(filepath, 'r', encoding='latin-1') as file: # open and read email file
-        content = file.read()
-    #parses email content
+    # Detect the file encoding
+    with open(filepath, 'rb') as file:
+        raw_data = file.read()
+        result = chardet.detect(raw_data)
+        file_encoding = result['encoding']
+
+    # Open and read email file with detected encoding, fallback to utf-8
+    try:
+        with open(filepath, 'r', encoding=file_encoding) as file:
+            content = file.read()
+    except UnicodeDecodeError:
+        # If detection fails, try with utf-8
+        with open(filepath, 'r', encoding='utf-8', errors='ignore') as file:
+            content = file.read()
+
+    # Parse email content
     msg = email.message_from_string(content)
-    # read the email content and retrieve relevant parts of the email such as subject, sending and body
+    
+    # Read the email content and retrieve relevant parts of the email such as subject, sender, and body
+    subject = msg['subject'] or ''
+    sender = msg['from'] or ''
+    
+    # Handle multipart messages and potential encoding issues in the body
+    if msg.is_multipart():
+        body = ''
+        for part in msg.walk():
+            if part.get_content_type() == "text/plain":
+                try:
+                    body += part.get_payload(decode=True).decode(part.get_content_charset() or 'utf-8', errors='ignore')
+                except:
+                    body += part.get_payload(decode=False)
+    else:
+        try:
+            body = msg.get_payload(decode=True).decode(msg.get_content_charset() or 'utf-8', errors='ignore')
+        except:
+            body = msg.get_payload(decode=False)
+
     return {
-        'subject': msg['subject'] or '',    # get email sender or empty string if none
-        'from': msg['from'] or '',          # get email sender or empty string if none
-        'body': msg.get_payload() if msg.is_multipart() else msg.get_payload(), # get email body content
+        'subject': subject,
+        'from': sender,
+        'body': body,
     }
 
 # prepares dataset from all of the email files
@@ -40,13 +72,19 @@ def prepare_dataset(base_directory):
     # returns the list of email (in form of dictionaries) to a dataframe
     return pd.DataFrame(data)
 
-#base_dir = r"C:\Users\Admin\Documents\Code\School Assignments\Project Phishing Detector\src\datasets" 
-base_dir = '/Users/zhiyong/project_phishing_detector/src/datasets'
+base_dir = r"C:\Users\Admin\Documents\Code\School Assignments\Project Phishing Detector\src\datasets" 
+#base_dir = '/Users/zhiyong/project_phishing_detector/src/datasets'
 
 #assigns the list of email dictionaries to df variable
 df = prepare_dataset(base_dir)
 
-# converts prepared dictionary dataset to a CSV file
-df.to_csv('email_dataset.csv', index=False)
+df.dropna()
+#df_clean = df.dropna()
 
-print(f"Dataset prepared with {len(df)} emails")
+# Optionally check again for any remaining missing values
+print("Missing values in each column:\n", df.isnull().sum())
+
+# converts prepared dictionary dataset to a CSV file
+df.to_csv('email_dataset_encode_change_final.csv', index=False, encoding='utf-8', na_rep='')
+
+#print(f"Dataset prepared with {len(df)} emails")
