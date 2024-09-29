@@ -6,21 +6,38 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
+import re
 
 # Load the data
-df = pd.read_csv('email_dataset.csv')
+df = pd.read_csv('email_dataset_encode_change_final.csv') # Updated the file name - Yong Ying
 df['text'] = df['subject'] + ' ' + df['body']
 
 # Handle NaN values by replacing them with an empty string
 df['text'] = df['text'].fillna('')
+df['body'] = df['body'].fillna('')
+
+# Added function to extract links / urls from email body - Yong Ying
+def url_extraction(text):
+    # Using regular expressions to find urls 
+    urlPattern = r'(https?://[^\s]+|www\.[^\s]+)'
+    urlsFind = re.findall(urlPattern, text)
+    return urlsFind
+
+df['numUrls'] = df['body'].apply(lambda x: len(url_extraction(x)))
 
 # Split the data
-X_train, X_test, y_train, y_test = train_test_split(df['text'], df['is_phishing'], test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(df[['text', 'numUrls']], df['is_phishing'], test_size=0.2, random_state=42)
 
 # Feature extraction 
 vectorizer = TfidfVectorizer(max_features=5000)
-X_train_vec = vectorizer.fit_transform(X_train)
-X_test_vec = vectorizer.transform(X_test)
+X_train_vec = vectorizer.fit_transform(X_train['text'])
+X_test_vec = vectorizer.transform(X_test['text'])
+
+# Convert the 'numUrls' column to sparse format and combine with TF-IDF features 
+from scipy.sparse import hstack
+
+X_train_combined = hstack([X_train_vec, X_train[['numUrls']].values])
+X_test_combined = hstack([X_test_vec, X_test[['numUrls']].values])
 
 # Train and evaluate models
 models = {
@@ -29,8 +46,8 @@ models = {
 }
 
 for name, model in models.items():
-    model.fit(X_train_vec, y_train)  # Fixed the method typo here
-    y_pred = model.predict(X_test_vec)
+    model.fit(X_train_combined, y_train)  # Fixed the method typo here
+    y_pred = model.predict(X_test_combined)
 
     print(f"\n{name} Results:")
     print(classification_report(y_test, y_pred))

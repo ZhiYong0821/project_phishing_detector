@@ -4,7 +4,9 @@ import seaborn as sns
 from sklearn.feature_extraction.text import CountVectorizer
 
 # load the prepared email data from earlier step
-df = pd.read_csv('email_dataset.csv')
+# df = pd.read_csv('email_dataset.csv')
+# Updated file name - YongYing
+df = pd.read_csv('email_dataset_encode_change_final.csv')
 
 # if there are any missing values in 'subject' and 'body' columns, fill it with empty strings
 df['subject'] = df['subject'].fillna('')
