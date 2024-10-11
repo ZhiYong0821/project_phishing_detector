@@ -57,7 +57,7 @@ grid_search.fit(features_train, category_train)
 # Best model from grid search
 best_model = grid_search.best_estimator_
 
-# Track user statistics (store in session state to persist across inputs)
+# Track user statistics of whether it is legitimate or phishing
 if 'phishing_count' not in st.session_state:
     st.session_state['phishing_count'] = 0
 if 'legitimate_count' not in st.session_state:
@@ -66,12 +66,12 @@ if 'legitimate_count' not in st.session_state:
 # Predict Data with probability
 def predict(message):
     input_message = cv.transform([message])
-    input_message = scaler.transform(input_message)  # Ensure to scale the input as well
+    input_message = scaler.transform(input_message)
     result = best_model.predict(input_message)
-    prob = best_model.predict_proba(input_message)  # Get the probabilities
+    prob = best_model.predict_proba(input_message)
     return result, prob
 
-# Function to load unwanted terms from a file
+# Load unwanted terms from a file
 def load_unwanted_terms(file_path):
     with open(file_path, 'r') as file:
         # Read lines and strip whitespace
@@ -80,7 +80,7 @@ def load_unwanted_terms(file_path):
 # Load unwanted terms
 unwanted_terms = load_unwanted_terms('UnwantedTerms.txt')
 
-# Function to filter valid English words from a message
+# Filter valid English words from a message
 def filter_valid_words(text):
     # Use a simple regex to find valid words (consisting of alphabetical characters)
     return re.findall(r'\b[a-zA-Z]+\b', text)
@@ -98,7 +98,7 @@ if st.button('Validate'):
     # Display prediction result
     result = str(output[0])
     confidence = prob[0][1] if result == 'Phishing' else prob[0][0]
-    confidence_percent = int(confidence * 100)  # Convert to whole percentage
+    confidence_percent = int(confidence * 100)
     
     # Update statistics
     if result == 'Phishing':
@@ -108,12 +108,12 @@ if st.button('Validate'):
         st.session_state['legitimate_count'] += 1
         st.success("This is a legitimate email.")
     
-    # Show certainty level with a custom progress bar
+    # Show certainty level with a progress bar
     st.write("What is the prediction confidence for this result (in percentage)?")
     # Output the confidence percentage
     st.write(f"The prediction confidence is **{confidence_percent}%**.")
     
-    # Create custom progress bar with 0% and 100% labels and show the prediction percentage
+    # Create progress bar with 0% and 100% labels and show the prediction percentage
     fig, ax = plt.subplots(figsize=(8, 1))
     
     # Draw a horizontal line from 0% to 100%
