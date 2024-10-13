@@ -74,11 +74,12 @@ summary_email = {
 
 for key, value in summary_email.items():
     print(f'{key}: {value}')
-
-
+'''
 # This code is to remove any NaN values and also add num_url column to excel file 
 df.dropna()
 
-df.to_csv("boss_email_dataset_encode_change_after_filter.csv", index=False, encoding='utf-8', na_rep='')
+df.to_csv("email_updated.csv", index=False, encoding='utf-8', na_rep='')
+
+'''
 
 print("Model training and feature extraction completed")

@@ -13,10 +13,10 @@ import nltk
 nltk.download('stopwords')
 
 # Load the dataset
-df = pd.read_csv('src/boss_email_dataset_encode_change_after_filter.csv')
+df = pd.read_csv('boss_email_dataset_encode_change_after_filter.csv')
 
 # Load unwanted terms from file
-with open('Deploy_+_Visual/UnwantedTerms.txt', 'r') as file:
+with open('../Deploy_+_Visual/UnwantedTerms.txt', 'r') as file:
     unwanted_terms = file.read().splitlines()
 
 # Fill missing values

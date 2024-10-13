@@ -10,14 +10,14 @@ from wordcloud import WordCloud
 import re
 
 # Load data
-data = pd.read_csv("C:\\INF1002\\PhishingEmailProject\\emails.csv")
+data = pd.read_csv("../src/boss_email_dataset_encode_change_after_filter.csv")
 
 # Data preprocessing
 data.drop_duplicates(inplace=True)
 data['is_phishing'] = data['is_phishing'].replace({0: 'Not Phishing', 1: 'Phishing'})
 
 # Combine subject, body, and from columns into a single message
-data['message'] = data['subject'].fillna('') + " " + data['body'].fillna('') + " " + data['from'].fillna('')
+data['message'] = data['subject'].fillna('') + " " + data['body'].fillna('') + " " + data['sender'].fillna('')
 
 # Drop any rows where 'message' is still empty
 data.dropna(subset=['message'], inplace=True)
