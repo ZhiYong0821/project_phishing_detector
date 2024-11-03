@@ -1,20 +1,35 @@
 # Project Phishing Detector
 
+This project is focused on detecting phishing emails using data analytics and machine learning. By analyzing patterns and features commonly associated with phishing emails, this project aims to build a model capable of distinguishing between legitimate and phishing emails.
+
+## Technology Stack
+- Python
+- Pandas
+- Scikit-Learn
+- MatPlotLib
+
 ## Key information
--Email datasets are obtained from https://spamassassin.apache.org/old/publiccorpus/
---email datasets are labeled as phishing/legitimate (1/0) based off the categorized email datasets downloaded from Spam Assasin Public Corpus
--- Spam Assasin Datasets contains 3 categories of emails:
---  Ham : Legitimate emails (easy to tell)
---  Hard Ham : Legitimate emails (hard to tell)
---  Spam : Phishing/Spam emails 
+
+- Email datasets are obtained from https://spamassassin.apache.org/old/publiccorpus/
+- Email datasets are labeled as phishing/legitimate (1/0) based off the categorized email datasets downloaded from Spam Assasin Public Corpus
+- Spam Assasin Datasets contains 3 categories of emails:
+  - Ham : Legitimate emails (easy to tell)
+  - Hard Ham : Legitimate emails (hard to tell)
+  - Spam : Phishing/Spam emails
 
 ## Installation requirements
--- 1. Python installed (3.8 or later)
--- 2. virtual environment created and activated
---   2.1 python -m venv env
---   2.2 env\Scripts\activate
--- 3. install required libraries
---   3.1 pip install pandas numpy scikit-learn matplotlib seaborn (see requirements.txt for version used for me (use pip install -r requirements.txt if needed))
+
+- Python installed (3.8 or later)
+- Create virtual environment and activate it
+
+```
+python -m venv venv
+env\Scripts\activate
+```
+- Install required libraries
+```
+pip install -r requirements.txt
+```
 
 ## How to use
 -data_prep.py file: 
