@@ -3,6 +3,7 @@
 This project is focused on detecting phishing emails using data analytics and machine learning. By analyzing patterns and features commonly associated with phishing emails, this project aims to build a model capable of distinguishing between legitimate and phishing emails.
 
 ## Technology Stack
+
 - Python
 - Pandas
 - Scikit-Learn
@@ -26,14 +27,14 @@ This project is focused on detecting phishing emails using data analytics and ma
 python -m venv venv
 env\Scripts\activate
 ```
+
 - Install required libraries
+
 ```
 pip install -r requirements.txt
 ```
 
 ## How to use
--data_prep.py file: 
---run this file to generate email_dataset.csv
 
--data_analysis.py file:
---run this file to generate visualizations using email_dataset.csv (ensure data cleaning is done) file.
+- Run the data_prep.py file to generate email_dataset.csv
+- Run the data_analysis.py file to generate visualizations using email_dataset.csv (ensure data cleaning is done first before running this file).
